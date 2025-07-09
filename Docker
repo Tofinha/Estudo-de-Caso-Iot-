@@ -1,0 +1,25 @@
+# Utiliza a imagem oficial do Python versão 3.12
+FROM python:3.12
+
+# Seta o diretório principal da aplicação
+WORKDIR /app
+
+# Configura variáveis de ambiente para melhor performance e evitar arquivos pyc
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    LANG=C.UTF-8
+
+# Copia o arquivo de requisitos para aproveitar cache durante instalação
+COPY requirements.txt ./
+
+# Realiza a instalação das dependências do projeto
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Transfere todos os arquivos da aplicação para o container
+COPY . .
+
+# Abre a porta padrão utilizada pelo Flask
+EXPOSE 5000
+
+# Define o comando para iniciar a aplicação Flask
+CMD ["python", "app.py"]
